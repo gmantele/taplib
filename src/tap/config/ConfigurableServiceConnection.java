@@ -16,7 +16,7 @@ package tap.config;
  * You should have received a copy of the GNU Lesser General Public License
  * along with TAPLibrary.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright 2016-2020 - UDS/Centre de Données astronomiques de Strasbourg (CDS),
+ * Copyright 2016-2021 - UDS/Centre de Données astronomiques de Strasbourg (CDS),
  *                       Astronomisches Rechen Institut (ARI)
  */
 
@@ -38,6 +38,7 @@ import static tap.config.TAPConfiguration.KEY_DEFAULT_OUTPUT_LIMIT;
 import static tap.config.TAPConfiguration.KEY_DEFAULT_RETENTION_PERIOD;
 import static tap.config.TAPConfiguration.KEY_DEFAULT_UPLOAD_LIMIT;
 import static tap.config.TAPConfiguration.KEY_DIRECTORY_PER_USER;
+import static tap.config.TAPConfiguration.KEY_EXTENDED_REGION_EXPRESSION;
 import static tap.config.TAPConfiguration.KEY_FILE_MANAGER;
 import static tap.config.TAPConfiguration.KEY_FILE_ROOT_PATH;
 import static tap.config.TAPConfiguration.KEY_FIX_ON_FAIL;
@@ -100,7 +101,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import adql.db.FunctionDef;
-import adql.db.STCS;
+import adql.db.region.CoordSys;
 import adql.parser.grammar.ParseException;
 import adql.query.operand.function.UserDefinedFunction;
 import tap.ServiceConnection;
@@ -139,7 +140,7 @@ import uws.service.log.UWSLog.LogLevel;
  * </p>
  *
  * @author Gr&eacute;gory Mantelet (CDS;ARI)
- * @version 2.4 (08/2020)
+ * @version 2.4 (04/2021)
  * @since 2.0
  */
 public final class ConfigurableServiceConnection implements ServiceConnection {
@@ -221,6 +222,11 @@ public final class ConfigurableServiceConnection implements ServiceConnection {
 	 * </em> */
 	private ArrayList<String> geometries = null;
 	private final String GEOMETRY_REGEXP = "(AREA|BOX|CENTROID|CIRCLE|CONTAINS|DISTANCE|COORD1|COORD2|COORDSYS|INTERSECTS|POINT|POLYGON|REGION)";
+
+	/** Indicated whether only a string literal is allowed as parameter of
+	 * REGION(...) (default) or not.
+	 * @since 2.4 */
+	private boolean isExtendedRegionExpressionAllowed = false;
 
 	/** List of all known and allowed User Defined Functions.
 	 * <em>If NULL, any unknown function is allowed. If empty list, none is
@@ -306,6 +312,7 @@ public final class ConfigurableServiceConnection implements ServiceConnection {
 		// 10. CONFIGURE ADQL:
 		initCoordSys(tapConfig);
 		initADQLGeometries(tapConfig);
+		isExtendedRegionExpressionAllowed = Boolean.parseBoolean(getProperty(tapConfig, KEY_EXTENDED_REGION_EXPRESSION));
 		initUDFs(tapConfig);
 		isFixOnFailEnabled = Boolean.parseBoolean(getProperty(tapConfig, KEY_FIX_ON_FAIL));
 	}
@@ -1145,7 +1152,7 @@ public final class ConfigurableServiceConnection implements ServiceConnection {
 					// parse the coordinate system regular expression in order to check it:
 					else {
 						try {
-							STCS.buildCoordSysRegExp(new String[]{ item });
+							CoordSys.buildCoordSysRegExp(new String[]{ item });
 							lstCoordSys.add(item);
 						} catch(ParseException pe) {
 							throw new TAPException("Incorrect coordinate system regular expression (\"" + item + "\"): " + pe.getMessage(), pe);
@@ -1777,6 +1784,11 @@ public final class ConfigurableServiceConnection implements ServiceConnection {
 	@Override
 	public Collection<String> getGeometries() {
 		return geometries;
+	}
+
+	@Override
+	public boolean isExtendedRegionExpressionAllowed() {
+		return isExtendedRegionExpressionAllowed;
 	}
 
 	@Override

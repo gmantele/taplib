@@ -16,7 +16,7 @@ package tap;
  * You should have received a copy of the GNU Lesser General Public License
  * along with TAPLibrary.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright 2012-2020 - UDS/Centre de Données astronomiques de Strasbourg (CDS),
+ * Copyright 2012-2021 - UDS/Centre de Données astronomiques de Strasbourg (CDS),
  *                       Astronomisches Rechen Institut (ARI)
  */
 
@@ -44,7 +44,7 @@ import uws.service.file.UWSFileManager;
  * </p>
  *
  * @author Gr&eacute;gory Mantelet (CDS;ARI)
- * @version 2.4 (08/2020)
+ * @version 2.4 (04/2021)
  */
 public interface ServiceConnection {
 
@@ -662,6 +662,23 @@ public interface ServiceConnection {
 	 * @since 2.0
 	 */
 	public Collection<String> getGeometries();
+
+	/**
+	 * <i>[OPTIONAL]</i>
+	 * <p>
+	 * 	Tell whether the REGION(...) only accepts a string literal as
+	 * 	parameter (standard and default behavior) or not (i.e. any special
+	 * 	syntax and any kind of string expression is allowed).
+	 * </p>
+	 *
+	 * @return	<code>true</code> if any syntax or any kind of string expression
+	 *        	is allowed,
+	 *        	<code>false</code> if only string literal (using DALI or STC/s
+	 *        	syntax) is allowed.
+	 *
+	 * @since 2.4
+	 */
+	public boolean isExtendedRegionExpressionAllowed();
 
 	/**
 	 * <i>[OPTIONAL]</i>

@@ -16,7 +16,7 @@ package tap.config;
  * You should have received a copy of the GNU Lesser General Public License
  * along with TAPLibrary.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright 2015-2020 - UDS/Centre de Données astronomiques de Strasbourg (CDS),
+ * Copyright 2015-2021 - UDS/Centre de Données astronomiques de Strasbourg (CDS),
  *                       Astronomisches Rechen Institut (ARI)
  */
 
@@ -41,7 +41,7 @@ import tap.backup.DefaultTAPBackupManager;
  * </i></p>
  *
  * @author Gr&eacute;gory Mantelet (CDS;ARI)
- * @version 2.4 (08/2020)
+ * @version 2.4 (04/2021)
  * @since 2.0
  */
 public final class TAPConfiguration {
@@ -397,6 +397,11 @@ public final class TAPConfiguration {
 	/** Value of {@value #KEY_COORD_SYS} and {@value #KEY_GEOMETRIES} that
 	 * forbid all possible values. */
 	public final static String VALUE_NONE = "NONE";
+	/** Name/Key of the property specifying whether the parameter of REGION(...)
+	 * is strict (i.e. only a string literal) or not. By default, it is strict
+	 * (so this property is <code>false</code>).
+	 * @since 2.4 */
+	public final static String KEY_EXTENDED_REGION_EXPRESSION = "extendedRegionExpression";
 	/** Name/Key of the property that lets declare all User Defined Functions
 	 * that must be allowed in ADQL queries. By default, all unknown functions
 	 * are rejected. This default behavior can be totally reversed by using the
