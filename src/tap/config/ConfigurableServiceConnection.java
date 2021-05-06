@@ -1314,6 +1314,7 @@ public final class ConfigurableServiceConnection implements ServiceConnection {
 							// ...or the given translation:
 							else if (translation != null) {
 								try {
+									// TODO Check the translation pattern!
 									def.setTranslationPattern(translation);
 								} catch(IllegalArgumentException iae) {
 									throw new TAPException("Invalid argument reference in the translation pattern for the UDF \"" + def + "\"! Cause: " + iae.getMessage());
