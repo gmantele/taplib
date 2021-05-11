@@ -41,7 +41,7 @@ import tap.backup.DefaultTAPBackupManager;
  * </i></p>
  *
  * @author Gr&eacute;gory Mantelet (CDS;ARI)
- * @version 2.4 (04/2021)
+ * @version 2.4 (05/2021)
  * @since 2.0
  */
 public final class TAPConfiguration {
@@ -474,6 +474,44 @@ public final class TAPConfiguration {
 	 */
 	public final static boolean isClassName(final String value) {
 		return (value != null && value.length() > 2 && value.charAt(0) == '{' && value.charAt(value.length() - 1) == '}');
+	}
+
+	/**
+	 * Fetch the class object corresponding to the class name provided between
+	 * brackets in the given value.
+	 *
+	 * @param value			Value which is supposed to contain the class name
+	 *             			between brackets (see {@link #isClassName(String)}
+	 *             			for more details)
+	 * @param expectedType	Type of the class expected to be returned ; it is
+	 *                    	also the type which parameterizes this function: C.
+	 *
+	 * @return	<code>true</code> if the specified class extends the given class,
+	 *        	<code>false</code> otherwise (including if not a class name or
+	 *        	an empty class name or if the specified class can not be found).
+	 *
+	 * @see #isClassName(String)
+	 *
+	 * @since 2.0
+	 */
+	public final static boolean isClassFor(final String value, final Class<?> expectedType) {
+		// Not a class name => false
+		if (!isClassName(value))
+			return false;
+
+		// Empty class name => false
+		String classPath = value.substring(1, value.length() - 1).trim();
+		if (classPath.isEmpty())
+			return false;
+
+		try {
+			// Assignable to the given class => true
+			return expectedType.isAssignableFrom(Class.forName(classPath));
+
+		} catch(Exception ex) {
+			// Unknown class path => false
+			return false;
+		}
 	}
 
 	/**
